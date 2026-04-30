@@ -8,6 +8,7 @@ services:
       - "8900:3000"
     volumes:
       - storage-data:/var/lib/outline/data
+      - ./patches/Header.EfEeDZzy.js:/opt/outline/build/app/assets/Header.EfEeDZzy.js:ro
     depends_on:
       postgres:
         condition: service_healthy
