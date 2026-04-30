@@ -9,6 +9,9 @@ services:
     volumes:
       - storage-data:/var/lib/outline/data
       - ./patches/Header.EfEeDZzy.js:/opt/outline/build/app/assets/Header.EfEeDZzy.js:ro
+      - ./patches/Shared.BjiKeSNH.js:/opt/outline/build/app/assets/Shared.BjiKeSNH.js:ro
+      - ./patches/sw.js:/opt/outline/build/app/sw.js:ro
+      - ./patches/index.html:/opt/outline/build/app/index.html:ro
     depends_on:
       postgres:
         condition: service_healthy
