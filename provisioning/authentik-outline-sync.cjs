@@ -4,8 +4,8 @@ const crypto = require("node:crypto");
 const { Client } = require("pg");
 
 const env = process.env;
-const authentikUrl = required("AUTHENTIK_URL").replace(/\/+$/, "");
-const authentikToken = required("AUTHENTIK_API_TOKEN");
+const authentikUrl = authentikBaseUrl().replace(/\/+$/, "");
+const authentikToken = firstRequired(["OUTLINE_SYNC_AUTHENTIK_TOKEN", "AUTHENTIK_API_TOKEN", "AUTHENTIK_TOKEN"]);
 const databaseUrl = required("DATABASE_URL");
 const intervalSeconds = numberEnv("OUTLINE_SYNC_INTERVAL_SECONDS", 900);
 const accessGroups = csv("OUTLINE_SYNC_ACCESS_GROUPS", "wiki-access,wiki-admin");
@@ -333,6 +333,28 @@ function required(name) {
     throw new Error(`${name} is required`);
   }
   return value;
+}
+
+function firstRequired(names) {
+  for (const name of names) {
+    if (env[name]) {
+      return env[name];
+    }
+  }
+  throw new Error(`${names.join(" or ")} is required`);
+}
+
+function authentikBaseUrl() {
+  if (env.AUTHENTIK_URL) {
+    return env.AUTHENTIK_URL;
+  }
+  const issuer = env.OIDC_ISSUER_URL || "";
+  const marker = "/application/o/";
+  const markerIndex = issuer.indexOf(marker);
+  if (markerIndex !== -1) {
+    return issuer.slice(0, markerIndex);
+  }
+  return required("AUTHENTIK_URL");
 }
 
 function delay(ms) {
