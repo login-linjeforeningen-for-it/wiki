@@ -62,6 +62,94 @@
         white-space: nowrap;
         width: 1px;
       }
+
+      .public-login-link {
+        align-items: center;
+        background: none;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        color: #f4f7fb;
+        cursor: var(--pointer);
+        display: inline-flex;
+        height: 32px;
+        justify-content: center;
+        line-height: 0;
+        opacity: 1;
+        padding: 0;
+        position: fixed;
+        right: 58px;
+        text-decoration: none;
+        top: 16px;
+        user-select: none;
+        width: 32px;
+        z-index: 2147483647;
+      }
+
+      .public-login-link:focus,
+      .public-login-link:hover {
+        background: rgba(148, 163, 184, 0.08);
+        border-color: rgba(148, 163, 184, 0.42);
+        opacity: 1;
+        outline: none;
+      }
+
+      .public-login-link::after {
+        background: #fff;
+        border-radius: 4px;
+        color: #2f3437;
+        content: attr(aria-label);
+        font-family: Inter, sans-serif;
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 1;
+        opacity: 0;
+        padding: 8px 10px;
+        pointer-events: none;
+        position: absolute;
+        right: 50%;
+        top: calc(100% + 8px);
+        transform: translateX(50%);
+        transition: opacity 100ms ease;
+        white-space: nowrap;
+      }
+
+      .public-login-link:focus::after,
+      .public-login-link:hover::after {
+        opacity: 1;
+      }
+
+      .public-login-link-icon {
+        border: 1.8px solid currentColor;
+        border-radius: 50%;
+        box-sizing: border-box;
+        display: inline-block;
+        height: 18px;
+        position: relative;
+        width: 18px;
+      }
+
+      .public-login-link-icon::before,
+      .public-login-link-icon::after {
+        background: currentColor;
+        content: "";
+        left: 50%;
+        position: absolute;
+        transform: translateX(-50%);
+      }
+
+      .public-login-link-icon::before {
+        border-radius: 50%;
+        height: 4px;
+        top: 3px;
+        width: 4px;
+      }
+
+      .public-login-link-icon::after {
+        border-radius: 6px 6px 0 0;
+        height: 5px;
+        top: 10px;
+        width: 10px;
+      }
     </style>
   </head>
 
@@ -80,13 +168,214 @@
           .setAttribute("content", color);
       }
     </script>
+    <script nonce="{csp-nonce}">
+      (function () {
+        var routeMap = {
+          "/s/doc/barkom": "/s/doc/doc/barkom-BarKomPubl",
+          "/s/doc/bedkom": "/s/doc/doc/bedkom-BedKomPubl",
+          "/s/doc/ctfkom": "/s/doc/doc/ctfkom-CTFKomPubl",
+          "/s/doc/docs": "/s/doc/doc/docs-p43FtJ1kTK",
+          "/s/doc/evntkom": "/s/doc/doc/evntkom-EvntKomPub",
+          "/s/doc/fondet": "/s/doc/doc/fondet-FondetPubl",
+          "/s/doc/groups": "/s/doc/doc/groups-GroupsPubl",
+          "/s/doc/hr": "/s/doc/doc/hr-HRPublic10",
+          "/s/doc/minutes/styremoter": "/s/doc/doc/styremoter-NoccT8oCxz",
+          "/s/doc/okonomi": "/s/doc/doc/okonomi-OkonomiPub",
+          "/s/doc/pr": "/s/doc/doc/pr-PRPublic01",
+          "/s/doc/satkom": "/s/doc/doc/satkom-SATKomPubl",
+          "/s/doc/tekkom": "/s/doc/doc/tekkom-TekkomPubl",
+          "/s/doc/budget": "/s/doc/doc/budsjett-uVaC5CaJB2",
+          "/s/doc/budget/2026": "/s/doc/doc/2026-k3D69RnWlz",
+          "/s/doc/budget/2025": "/s/doc/doc/2025-Budsj2025X",
+          "/s/doc/budget/2024": "/s/doc/doc/2024-Budsj2024X",
+          "/s/doc/budget/2023": "/s/doc/doc/2023-Budsj2023X",
+          "/s/doc/budget/2022": "/s/doc/doc/2022-Budsj2022X",
+          "/s/doc/budget/2021": "/s/doc/doc/2021-Budsj2021X",
+          "/s/doc/budget/2020": "/s/doc/doc/2020-Budsj2020X"
+        };
+        var normalize = function (path) {
+          return path.length > 1 ? path.replace(/\/$/, "") : path;
+        };
+        var reverseRouteMap = Object.keys(routeMap).reduce(function (routes, prettyRoute) {
+          routes[routeMap[prettyRoute]] = prettyRoute;
+          return routes;
+        }, {});
+        var displayUrl = function (url) {
+          if (typeof url !== "string") return url;
+          var parsed = new URL(url, window.location.origin);
+          var prettyRoute = reverseRouteMap[normalize(parsed.pathname)];
+          if (!prettyRoute) return url;
+          return prettyRoute + parsed.search + parsed.hash;
+        };
+        var rawReplaceState = window.history.replaceState.bind(window.history);
+        var rawPushState = window.history.pushState.bind(window.history);
+        window.history.replaceState = function (state, title, url) {
+          return rawReplaceState(state, title, displayUrl(url));
+        };
+        window.history.pushState = function (state, title, url) {
+          return rawPushState(state, title, displayUrl(url));
+        };
+        var prettyPath = normalize(window.location.pathname);
+        var internalPath = routeMap[prettyPath];
+        if (internalPath) {
+          rawReplaceState(window.history.state, "", internalPath + window.location.search + window.location.hash);
+          window.addEventListener("load", function () {
+            rawReplaceState(window.history.state, "", prettyPath + window.location.search + window.location.hash);
+          });
+        }
+        document.addEventListener("click", function (event) {
+          var target = event.target;
+          var link = target && target.closest ? target.closest("a[href]") : null;
+          if (!link) return;
+          var url = new URL(link.getAttribute("href"), window.location.origin);
+          if (url.origin !== window.location.origin) return;
+          var cleanPath = reverseRouteMap[normalize(url.pathname)];
+          if (cleanPath) {
+            event.preventDefault();
+            window.location.assign(cleanPath + url.search + url.hash);
+            return;
+          }
+          if (/^\/s\/[^/]+(?:\/|$)/.test(window.location.pathname) && /^\/doc\//.test(normalize(url.pathname))) {
+            event.preventDefault();
+            window.location.assign(publicDocPath(url));
+            return;
+          }
+          if (routeMap[normalize(url.pathname)]) {
+            event.preventDefault();
+            window.location.assign(url.href);
+          }
+        }, true);
+        var currentShareBase = function () {
+          var match = normalize(window.location.pathname).match(/^\/s\/([^/]+)/);
+          return match ? "/s/" + match[1] : "/s/doc";
+        };
+        var publicDocPath = function (url) {
+          return currentShareBase() + normalize(url.pathname) + url.search + url.hash;
+        };
+        var normalizePublicDocLinks = function () {
+          if (!/^\/s\/[^/]+(?:\/|$)/.test(window.location.pathname)) return;
+          document.querySelectorAll('a[href^="/doc/"]').forEach(function (link) {
+            var url = new URL(link.getAttribute("href"), window.location.origin);
+            link.setAttribute("href", publicDocPath(url));
+          });
+        };
+        var linkAttempts = 0;
+        var linkInterval = window.setInterval(function () {
+          normalizePublicDocLinks();
+          linkAttempts += 1;
+          if (linkAttempts > 40) window.clearInterval(linkInterval);
+        }, 250);
+        window.addEventListener("load", normalizePublicDocLinks);
+      })();
+    </script>
     {script-tags}
+    <script nonce="{csp-nonce}">
+      (function () {
+        var isPublicPath = function () {
+          return /^\/s\/doc(?:\/|$)/.test(window.location.pathname);
+        };
+        var hasAccountUi = function () {
+          return Boolean(
+            document.querySelector('[aria-label="User menu"], [data-testid="user-menu"], a[href="/settings"]')
+          );
+        };
+        var loginLabels = {
+          "cs-cz": "Přihlášení",
+          "da-dk": "Login",
+          "de-de": "Anmelden",
+          "en-gb": "Login",
+          "en-us": "Login",
+          "es-es": "Iniciar sesión",
+          "fa-ir": "ورود",
+          "fr-fr": "Identification",
+          "he-il": "כְּנִיסָה לַמַעֲרֶכֶת",
+          "hu-hu": "Login",
+          "id-id": "Masuk",
+          "it-it": "Accedi",
+          "ja-jp": "ログイン",
+          "ko-kr": "로그인",
+          "nb-no": "Logg inn",
+          "nl-nl": "Inloggen",
+          "pl-pl": "Zaloguj się",
+          "pt-br": "Iniciar sessão",
+          "pt-pt": "Entrada",
+          "ro-ro": "Login",
+          "sv-se": "Logga in",
+          "th-th": "Login",
+          "tr-tr": "Oturum aç",
+          "uk-ua": "Логін",
+          "vi-vn": "Đăng nhập",
+          "zh-cn": "登录",
+          "zh-tw": "登入"
+        };
+        var languageAliases = {
+          cs: "cs-cz",
+          da: "da-dk",
+          de: "de-de",
+          en: "en-us",
+          es: "es-es",
+          fa: "fa-ir",
+          fr: "fr-fr",
+          he: "he-il",
+          hu: "hu-hu",
+          id: "id-id",
+          it: "it-it",
+          ja: "ja-jp",
+          ko: "ko-kr",
+          nb: "nb-no",
+          no: "nb-no",
+          nl: "nl-nl",
+          pl: "pl-pl",
+          pt: "pt-pt",
+          ro: "ro-ro",
+          sv: "sv-se",
+          th: "th-th",
+          tr: "tr-tr",
+          uk: "uk-ua",
+          vi: "vi-vn",
+          zh: "zh-cn"
+        };
+        var getLoginLabel = function () {
+          var candidates = [document.documentElement.lang].concat(navigator.languages || [navigator.language]);
+          for (var i = 0; i < candidates.length; i += 1) {
+            var language = (candidates[i] || "").toLowerCase().replace("_", "-");
+            if (loginLabels[language]) return loginLabels[language];
+            var base = language.split("-")[0];
+            var alias = languageAliases[base];
+            if (alias && loginLabels[alias]) return loginLabels[alias];
+          }
+          return loginLabels["nb-no"];
+        };
+        var addLoginLink = function () {
+          if (!isPublicPath() || hasAccountUi() || document.querySelector("[data-public-login-link]")) return;
+          var link = document.createElement("a");
+          link.className = "public-login-link";
+          link.href = "/auth/login";
+          link.setAttribute("aria-label", getLoginLabel());
+          link.setAttribute("data-public-login-link", "true");
+
+          var icon = document.createElement("span");
+          icon.className = "public-login-link-icon";
+          icon.setAttribute("aria-hidden", "true");
+          link.appendChild(icon);
+
+          document.body.appendChild(link);
+        };
+        var attempts = 0;
+        var interval = window.setInterval(function () {
+          addLoginLink();
+          attempts += 1;
+          if (attempts > 20) window.clearInterval(interval);
+        }, 250);
+        window.addEventListener("load", addLoginLink);
+      })();
+    </script>
     <script nonce="{csp-nonce}">
       (function () {
         if (window.location.pathname !== "/s/doc" && window.location.pathname !== "/s/doc/") return;
         var attempts = 0;
         var collapse = function () {
-          var buttons = document.querySelectorAll("nav[aria-label=\\"Documents\\"] button[aria-expanded=\\"true\\"]");
+          var buttons = document.querySelectorAll('nav[aria-label="Documents"] button[aria-expanded="true"]');
           buttons.forEach(function (button) {
             if ((button.textContent || "").trim() === "Collapse") button.click();
           });
