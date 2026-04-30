@@ -170,68 +170,19 @@
     </script>
     <script nonce="{csp-nonce}">
       (function () {
-        var routeMap = {
-          "/s/doc/docs": "/s/doc/doc/docs-p43FtJ1kTK",
-          "/s/doc/minutes/styremoter": "/s/doc/doc/styremoter-NoccT8oCxz",
-          "/s/doc/budget": "/s/doc/doc/budsjett-uVaC5CaJB2",
-          "/s/doc/budget/2026": "/s/doc/doc/2026-k3D69RnWlz",
-          "/s/doc/budget/2025": "/s/doc/doc/2025-Budsj2025X",
-          "/s/doc/budget/2024": "/s/doc/doc/2024-Budsj2024X",
-          "/s/doc/budget/2023": "/s/doc/doc/2023-Budsj2023X",
-          "/s/doc/budget/2022": "/s/doc/doc/2022-Budsj2022X",
-          "/s/doc/budget/2021": "/s/doc/doc/2021-Budsj2021X",
-          "/s/doc/budget/2020": "/s/doc/doc/2020-Budsj2020X"
-        };
         var normalize = function (path) {
           return path.length > 1 ? path.replace(/\/$/, "") : path;
         };
-        var reverseRouteMap = Object.keys(routeMap).reduce(function (routes, prettyRoute) {
-          routes[routeMap[prettyRoute]] = prettyRoute;
-          return routes;
-        }, {});
-        var displayUrl = function (url) {
-          if (typeof url !== "string") return url;
-          var parsed = new URL(url, window.location.origin);
-          var prettyRoute = reverseRouteMap[normalize(parsed.pathname)];
-          if (!prettyRoute) return url;
-          return prettyRoute + parsed.search + parsed.hash;
-        };
-        var rawReplaceState = window.history.replaceState.bind(window.history);
-        var rawPushState = window.history.pushState.bind(window.history);
-        window.history.replaceState = function (state, title, url) {
-          return rawReplaceState(state, title, displayUrl(url));
-        };
-        window.history.pushState = function (state, title, url) {
-          return rawPushState(state, title, displayUrl(url));
-        };
-        var prettyPath = normalize(window.location.pathname);
-        var internalPath = routeMap[prettyPath];
-        if (internalPath) {
-          rawReplaceState(window.history.state, "", internalPath + window.location.search + window.location.hash);
-          window.addEventListener("load", function () {
-            rawReplaceState(window.history.state, "", prettyPath + window.location.search + window.location.hash);
-          });
-        }
         document.addEventListener("click", function (event) {
           var target = event.target;
           var link = target && target.closest ? target.closest("a[href]") : null;
           if (!link) return;
           var url = new URL(link.getAttribute("href"), window.location.origin);
           if (url.origin !== window.location.origin) return;
-          var cleanPath = reverseRouteMap[normalize(url.pathname)];
-          if (cleanPath) {
-            event.preventDefault();
-            window.location.assign(cleanPath + url.search + url.hash);
-            return;
-          }
           if (/^\/s\/[^/]+(?:\/|$)/.test(window.location.pathname) && /^\/doc\//.test(normalize(url.pathname))) {
             event.preventDefault();
             window.location.assign(publicDocPath(url));
             return;
-          }
-          if (routeMap[normalize(url.pathname)]) {
-            event.preventDefault();
-            window.location.assign(url.href);
           }
         }, true);
         var currentShareBase = function () {
