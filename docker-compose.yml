@@ -1,5 +1,6 @@
 services:
   outline:
+    container_name: outline
     image: outlinewiki/outline:1.7
     restart: always
     env_file: .env
@@ -23,6 +24,7 @@ services:
 
   outline-provisioner:
     image: outlinewiki/outline:1.7
+    container_name: outline_provisioner
     restart: always
     mem_limit: 1g
     cpus: "2.0"
@@ -38,6 +40,7 @@ services:
 
   redis:
     image: redis
+    container_name: outline_redis
     restart: always
     mem_limit: 1g
     cpus: "2.0"
@@ -55,6 +58,7 @@ services:
 
   postgres:
     image: postgres:18
+    container_name: outline_database
     restart: always
     mem_limit: 1g
     cpus: "2.0"
