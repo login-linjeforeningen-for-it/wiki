@@ -1,7 +1,10 @@
 services:
   outline:
     image: outlinewiki/outline:1.7
+    restart: always
     env_file: .env
+    mem_limit: 1g
+    cpus: "2.0"
     expose:
       - "3000"
     ports:
@@ -20,6 +23,9 @@ services:
 
   outline-provisioner:
     image: outlinewiki/outline:1.7
+    restart: always
+    mem_limit: 1g
+    cpus: "2.0"
     env_file: .env
     command: ["node", "/opt/outline/provisioning/authentik-outline-sync.cjs", "--loop"]
     volumes:
@@ -32,6 +38,9 @@ services:
 
   redis:
     image: redis
+    restart: always
+    mem_limit: 1g
+    cpus: "2.0"
     env_file: .env
     expose:
       - "6379"
@@ -46,6 +55,9 @@ services:
 
   postgres:
     image: postgres:18
+    restart: always
+    mem_limit: 1g
+    cpus: "2.0"
     env_file: .env
     expose:
       - "5432"
